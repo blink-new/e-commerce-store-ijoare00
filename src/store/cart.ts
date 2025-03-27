@@ -1,38 +1,28 @@
 import { create } from 'zustand';
-import { CartItem } from '../types';
-
-interface CartStore {
-  items: CartItem[];
-  addItem: (item: CartItem) => void;
-  removeItem: (productId: string, size: number) => void;
-  updateQuantity: (productId: string, size: number, quantity: number) => void;
-  clearCart: () => void;
-}
+import { CartStore, CartItem } from '../types/cart';
 
 export const useCartStore = create<CartStore>((set) => ({
   items: [],
-  addItem: (item) =>
+  isOpen: false,
+  setIsOpen: (isOpen) => set({ isOpen }),
+  addItem: (newItem) =>
     set((state) => {
-      const existingItem = state.items.find(
-        (i) => i.productId === item.productId && i.size === item.size
+      const existingItemIndex = state.items.findIndex(
+        (item) => item.productId === newItem.productId && item.size === newItem.size
       );
-      
-      if (existingItem) {
-        return {
-          items: state.items.map((i) =>
-            i.productId === item.productId && i.size === item.size
-              ? { ...i, quantity: i.quantity + item.quantity }
-              : i
-          ),
-        };
+
+      if (existingItemIndex > -1) {
+        const newItems = [...state.items];
+        newItems[existingItemIndex].quantity += newItem.quantity;
+        return { items: newItems };
       }
-      
-      return { items: [...state.items, item] };
+
+      return { items: [...state.items, newItem] };
     }),
   removeItem: (productId, size) =>
     set((state) => ({
       items: state.items.filter(
-        (i) => !(i.productId === productId && i.size === size)
+        (item) => !(item.productId === productId && item.size === size)
       ),
     })),
   updateQuantity: (productId, size, quantity) =>
