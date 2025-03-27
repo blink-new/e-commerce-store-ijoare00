@@ -6,6 +6,8 @@ import { CartSlideOver } from './components/CartSlideOver';
 import { Home } from './pages/Home';
 import { Catalog } from './pages/Catalog';
 import { ProductDetail } from './pages/ProductDetail';
+import { Checkout } from './pages/Checkout';
+import { OrderSuccess } from './pages/OrderSuccess';
 
 function App() {
   const [queryClient] = useState(() => new QueryClient());
@@ -21,6 +23,8 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/catalog" element={<Catalog />} />
               <Route path="/product/:id" element={<ProductDetail />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/order-success" element={<OrderSuccess />} />
             </Routes>
           </main>
         </div>
